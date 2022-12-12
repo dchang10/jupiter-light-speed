@@ -1,5 +1,4 @@
 import p5 from "p5";
-import { FFT } from "p5/lib/addons/p5.sound";
 import { convertArray } from "three/src/animation/AnimationUtils";
 //import "../audio/piano2-CoolEdit.mp3"
 import "../images/moon.png"
@@ -14,66 +13,98 @@ const sketch = (s) => {
   let jsize = 80 // Size of Jupiter
   let msize = 16 // Size of Moon
   let esize = 160 // Size of Earth 
-  let w = window.innerWidth/2; // Width of entire wave
+  let w = 0;  // Width of entire wave
   let theta = 0.0; // Start angle at 0
   let amplitude = 58; // Height of wave
-  let period = window.innerWidth/3 - msize; // How many pixels before the wave repeats
+  let period = 0; // How many pixels before the wave repeats
   let dx; // Value for incrementing x
   let yvalues; // Using an array to store height values for the wave
   let etrans = 0;
   let prevobsx = esize/2;
-  let prevobsy = 3*window.innerHeight/4 + 1.5*amplitude;
+  let prevobsy = 0;
   let prevactx = esize/2;
-  let prevacty = 0;//3*window.innerHeight/4 + 1.5*amplitude*Math.cos(0.05*yvalues.length);
+  let prevacty = 0;//3*800/4 + 1.5*amplitude*Math.cos(0.05*yvalues.length);
 
 
 
   s.setup = () => {
-    //sound = s.loadSound('./audio/piano2-CoolEdit.mp3');
+    prevobsy = 3*800/4 + 1.5*amplitude
+    w = 1700/2;
+    period = 1700/3 - msize;
     moon_img = s.loadImage("./images/moon.png");
     jupiter_img = s.loadImage("./images/jupiter.png");
     earth_img = s.loadImage("./images/earth.png");
-    let cnv = s.createCanvas(window.innerWidth, window.innerHeight);
+    let cnv = s.createCanvas(1700, 800);
     dx = (2*Math.PI / period) * xspacing;
     s.background(0);
     s.fill(255);
     s.textSize(30);
-    s.text('Orbital Position of Io', window.innerWidth/2-150, 2*window.innerHeight/4 + 30)
-    //s.text('Earth moving towards Jupiter', 100, 2*window.innerHeight/4 + 100)
-    //s.text('Earth moving away from Jupiter', 2*window.innerWidth/4+100, 2*window.innerHeight/4 + 100)
-    s.text('Earth stationery with respect to Jupiter', 2*window.innerWidth/4-250, 2*window.innerHeight/4 + 100)
+    s.text('Orbital Position of Io', 1700/2-150, 2*800/4 + 30)
+    s.text('Earth moving towards Jupiter', 100, 2*800/4 + 100)
+    s.text('Earth moving away from Jupiter', 2*1700/4+100, 2*800/4 + 100)
+    //s.text('Earth stationery with respect to Jupiter', 2*1700/4-250, 2*800/4 + 100)
     yvalues = new Array(Math.floor((w - (msize + esize)/2)/xspacing));
-    prevacty = 3*window.innerHeight/4 + 1.5*amplitude*Math.cos(dx*yvalues.length);
+    prevacty = 3*800/4 + 1.5*amplitude*Math.cos(dx*yvalues.length);
     s.strokeWeight(5);
     s.stroke('green');
     s.fill('green');
-    s.line(window.innerWidth - 500, 3/4*window.innerHeight + 1.5*amplitude + 50, window.innerWidth - 450, 3/4*window.innerHeight + 1.5*amplitude + 50);
+    s.line(1700 - 500, 3/4*800 + 1.5*amplitude + 50, 1700 - 450, 3/4*800 + 1.5*amplitude + 50);
     s.stroke('red');
     s.fill('red');
-    s.line(window.innerWidth - 500, 3/4*window.innerHeight + 1.5*amplitude + 100, window.innerWidth - 450, 3/4*window.innerHeight + 1.5*amplitude + 100);
+    s.line(1700 - 500, 3/4*800 + 1.5*amplitude + 100, 1700 - 450, 3/4*800 + 1.5*amplitude + 100);
     s.strokeWeight(2);
     s.stroke('white');
     s.fill('white');
-    s.text('Observed Position', window.innerWidth - 420, 3/4*window.innerHeight + 1.5*amplitude + 60)
-    s.text('Actual Position', window.innerWidth - 420, 3/4*window.innerHeight + 1.5*amplitude + 110)
-    //s.drawingContext.setLineDash([5, 5])
-    //s.line(window.innerWidth/2 - 5, window.innerHeight/2 + 35, window.innerWidth/2 - 5, window.innerHeight);
+    s.text('Observed Position', 1700 - 420, 3/4*800 + 1.5*amplitude + 60)
+    s.text('Actual Position', 1700 - 420, 3/4*800 + 1.5*amplitude + 110)
+    s.drawingContext.setLineDash([5, 5])
+    s.line(1700/2 - 5, 800/2 + 35, 1700/2 - 5, 800);
+    s.drawingContext.setLineDash([0,0])
+  }
+
+  s.reset = () => {
+    
+    s.background(0);
+    s.stroke('black');
+    s.fill('white');
+    s.strokeWeight(2);
+    s.fill(255);
+    s.textSize(30);
+    s.text('Orbital Position of Io', 1700/2-150, 2*800/4 + 30)
+    s.text('Earth moving towards Jupiter', 100, 2*800/4 + 100)
+    s.text('Earth moving away from Jupiter', 2*1700/4+100, 2*800/4 + 100)
+    s.strokeWeight(5);
+    s.stroke('green');
+    s.fill('green');
+    s.line(1700 - 500, 3/4*800 + 1.5*amplitude + 50, 1700 - 450, 3/4*800 + 1.5*amplitude + 50);
+    s.stroke('red');
+    s.fill('red');
+    s.line(1700 - 500, 3/4*800 + 1.5*amplitude + 100, 1700 - 450, 3/4*800 + 1.5*amplitude + 100);
+    s.strokeWeight(2);
+    s.stroke('white');
+    s.fill('white');
+    s.text('Observed Position', 1700 - 420, 3/4*800 + 1.5*amplitude + 60)
+    s.text('Actual Position', 1700 - 420, 3/4*800 + 1.5*amplitude + 110)
+    s.drawingContext.setLineDash([5, 5])
+    s.line(1700/2 - 5, 800/2 + 35, 1700/2 - 5, 800);
     s.drawingContext.setLineDash([0,0])
 
-
-
-    //addEventListener("resize", (event) => {s.setup();});
+    theta = 0.0;
+    etrans = 0;
+    prevobsx = etrans + esize/2;
+    prevobsy = 3*800/4 + 1.5*amplitude
+    prevactx = prevobsx;
+    prevacty = 3*800/4 + 1.5*amplitude*Math.cos(dx*yvalues.length);
+    s.calcWave();
   }
 
   s.draw = () => {
-    
-
     s.strokeWeight(2);
     s.fill(0);
     s.stroke('black');
-    s.rect(0, 0, window.innerWidth, window.innerHeight/2);
+    s.rect(0, 0, 1700, 800/2);
     s.stroke('white');
-    s.line(0, window.innerHeight/2 + 35, window.innerWidth, window.innerHeight/2 + 35);
+    s.line(0, 800/2 + 35, 1700, 800/2 + 35);
    
     if(s.calcWave()< Math.PI){
       s.renderJupiter();
@@ -85,21 +116,25 @@ const sketch = (s) => {
       s.renderJupiter();
     }
     s.renderEarth();
-    etrans += window.innerWidth;
-    etrans %= window.innerWidth;
+    //etrans += 1700;
+    if( etrans > (1700 - esize)){
+      s.reset();
+      etrans %= 1700;
+    }
     s.strokeWeight(5);
     s.stroke('green');
     s.fill('green');
-    s.line(prevobsx, prevobsy, etrans + esize/2, 3/4*window.innerHeight + 1.5*yvalues[0]);//yvalues.length-Math.abs(yvalues.length-etrans)]);
+    s.line(prevobsx, prevobsy, etrans + esize/2, 3/4*800 + 1.5*yvalues[yvalues.length-Math.abs(yvalues.length-etrans)]);
     s.stroke('red');
     s.fill('red');
-    s.line(prevactx, prevacty, etrans + esize/2, 3/4*window.innerHeight + 1.5*yvalues[yvalues.length-1]);
+    s.line(prevactx, prevacty, etrans + esize/2, 3/4*800 + 1.5*yvalues[yvalues.length-1]);
     prevobsx = etrans + esize/2;
-    prevobsy = 3/4*window.innerHeight + 1.5*yvalues[0];//yvalues.length-Math.abs(yvalues.length-etrans)];
+    prevobsy = 3/4*800 + 1.5*yvalues[yvalues.length-Math.abs(yvalues.length-etrans)];
     prevactx = prevobsx;
-    prevacty = 3/4*window.innerHeight + 1.5*yvalues[yvalues.length-1];
+    prevacty = 3/4*800 + 1.5*yvalues[yvalues.length-1];
 
   }
+
   s.calcWave = () => {
     // Increment theta (try different values for
     // 'angular velocity' here)
@@ -116,31 +151,25 @@ const sketch = (s) => {
   }
   s.renderWave = () => {
     s.stroke(255);
-    //for (let x = yvalues.length-Math.abs(yvalues.length-etrans); x < yvalues.length-msize/2; x++) {
-    //  
-    //  let y0 = window.innerHeight / 4  + yvalues[x-1]
-    //  let y1 = window.innerHeight / 4  + yvalues[x]
-    //  if(etrans < yvalues.length){
-    //    let x0 = x * xspacing + xspacing + esize/2
-    //    s.line(x0, y0, x0 + xspacing, y1);
-    //  } else {
-    //    let x0 = -x * xspacing + xspacing - esize/2
-    //    x0 += window.innerWidth
-    //    s.line(x0 + xspacing, y0, x0, y1);
-    //  }
-    //}
-    for (let x = yvalues.length-Math.abs(yvalues.length); x < yvalues.length-msize/2; x++) {
-      let y0 = window.innerHeight / 4  + yvalues[x-1]
-      let y1 = window.innerHeight / 4  + yvalues[x]
-      let x0 = x * xspacing + xspacing + esize/2
-      s.line(x0, y0, x0 + xspacing, y1);
+    for (let x = yvalues.length-Math.abs(yvalues.length-etrans); x < yvalues.length-msize/2; x++) {
+      
+      let y0 = 800 / 4  + yvalues[x-1]
+      let y1 = 800 / 4  + yvalues[x]
+      if(etrans < yvalues.length){
+        let x0 = x * xspacing + xspacing + esize/2
+        s.line(x0, y0, x0 + xspacing, y1);
+      } else {
+        let x0 = -x * xspacing + xspacing - esize/2
+        x0 += 1700
+        s.line(x0 + xspacing, y0, x0, y1);
+      }
     }
 
   }
 
   s.renderLo = () => {
-    let x0 = window.innerWidth/2 - (msize)/2;
-    let y0 = window.innerHeight / 4  + yvalues[yvalues.length-1] - (msize)/2;
+    let x0 = 1700/2 - (msize)/2;
+    let y0 = 800 / 4  + yvalues[yvalues.length-1] - (msize)/2;
 
     s.fill(255);
     s.stroke(255);
@@ -149,8 +178,8 @@ const sketch = (s) => {
   }
 
   s.renderJupiter = () => {
-    let x0 = window.innerWidth/2 - jsize/2
-    let y0 = window.innerHeight / 4  - (jsize / 2)
+    let x0 = 1700/2 - jsize/2
+    let y0 = 800 / 4  - (jsize / 2)
     //s.ellipse(x0, y0, 16, 16);
 
     s.fill(255);
@@ -159,8 +188,8 @@ const sketch = (s) => {
     s.image(jupiter_img, x0, y0, jsize, jsize);
   }
   s.renderEarth = () => {
-    let x0 = 0;etrans
-    let y0 = window.innerHeight / 4  - (jsize + esize/2)/ 2
+    let x0 = etrans;
+    let y0 = 800 / 4  - (jsize + esize/2)/ 2
     //s.ellipse(x0, y0, 16, 16);
     
 

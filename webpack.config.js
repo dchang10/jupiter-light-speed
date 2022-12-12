@@ -3,7 +3,6 @@ const webpack = require("webpack");
 
 const PATHS = {
   src: path.join(__dirname, 'src'),
-  audio: path.join(__dirname, 'src/audio'),
   images: path.join(__dirname, 'src/images'),
 }
 
